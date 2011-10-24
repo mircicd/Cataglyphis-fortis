@@ -1,0 +1,60 @@
+MATLAB FS11 – Research Plan
+
+
+Document Version: 1
+Group Name: Cataglyphis fortis
+Group participants names: Breitenmoser Remo, Markaj Anton, Mircic Dejan, Wolf Jan
+
+
+General Introduction
+
+Our motivation is to analyze and fully understand the navigational behavior of the desert ant. We think it’s an interesting task because understanding the way such a simple organism like an ant is able to solve complex navigational tasks can be very helpful when it comes to develop technical navigational solutions. 
+Another interesting fact is that the insights about the ant’s navigational behavior are beginning to affect even the ways in which psychologists think about human spatial representations.
+
+
+Fundamental Questions
+
+How does such a miniature brain solve the navigation problems?
+What’s the interaction between the global vector, local vectors (and the search algorithm)?
+What happens if one or more of the ant’s  “Navigation – Tools” are detained?
+What’s an appropriate implementation of a landmark based navigation?
+How do the amount and the distribution of local vectors affect the foraging efficiency?
+What is more efficient: Storing local vectors for a certain time or storing a certain amount of local vectors?
+Is the model applicable to the ant’s natural behavior? 
+
+
+
+Expected Results
+
+We expect that the ant’s brain relies on a procedural knowledge instead of mapping the area.
+We expect to obtain similar results to the ones in the papers since the model is quite well described and simple. 
+We expect the model to fit the test results and to approximate the ant’s natural foraging behavior.
+
+References 
+
+We use the papers provided by the course:
+-	Path_Integration_in_Ants_Mueller1988
+-	Desert_Ant_Navigation-Wehner1998
+-	Desert_Ant_Navigation-Wehner2003
+
+Furthermore, we use some related material we found on the internet:
+-	Susanne Åkesson, Rüdiger Wehner Visual navigation in desert ants Cataglyphis fortis: are snapshots coupled to a celestial system of reference?
+-	P. E. Ziegler, R. Wehner Time-courses of memory decay in vector-based and landmark-based systems of navigation in desert ants, Cataglyphis fortis
+-	M. Müller, R. Wehner The hidden spiral: systematic search and path integration in desert ants, Cataglyphis fortis
+-	Stefan Sommer, Rüdiger Wehner Vector navigation in desert ants, Cataglyphis fortis : celestial compass cues are essential for the proper use of distance information
+
+Possible Extensions
+
+Implementation of a search algorithm which is called into action when there is neither a global nor a local vector available.
+A possible extension to the given model could be the implementation of a further navigational aid which is an olfactory landmark set by the ant while foraging through terrain. This has been discovered recently and is therefore not mentioned in the papers provided by the course.
+Another extension would be to implement the communication between two ants through antennae and odor.
+
+
+
+Research Methods
+
+Agent-based modeling to describe the ant’s brain.
+Simulate the ant’s behavior in the desert / Test – Area
+Determine and visualize the errors of the ant’s return path direction influenced by diverse circumstances.
+
+
