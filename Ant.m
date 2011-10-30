@@ -6,6 +6,10 @@ classdef Ant < handle
         pos = [0, 0];               % Position
         speed = 1;                  % Movement speed
         global_v = [0, 0];          % Global vector
+        ang = 0;                    % Current moving angle
+        phi = 0;                  % Mean angle
+        l = 0;                    % Mean distance
+        
         im = imread('ant.png');     % Image to plot
     end
     
@@ -16,20 +20,52 @@ classdef Ant < handle
             
             arrived = 0;
             
-            x_dist = x - obj.pos(1);    % Horizontal distance
-            y_dist = y - obj.pos(2);    % Vertical distance
-            if abs(x_dist) > 5 || abs(y_dist) > 5
-                dist = sqrt(x_dist^2 + y_dist^2);   % Euclidean distance
-                obj.pos(1) = obj.pos(1) + (obj.speed*x_dist)/dist;  % Move ant along x-axis
-                obj.pos(2) = obj.pos(2) + (obj.speed*y_dist)/dist;  % Move ant along y-axis
+            x_dist = x - obj.pos(1);            % Horizontal distance
+            y_dist = y - obj.pos(2);            % Vertical distance
+            dist = sqrt(x_dist^2 + y_dist^2);   % Euclidean distance
+            
+            if dist >= obj.speed
+                % Move the ant
+                move_x = (obj.speed*x_dist)/dist;
+                move_y = (obj.speed*y_dist)/dist;
+                obj.ang = angle(move_x + move_y*1i);% Compute current angle
+                obj.pos(1) = obj.pos(1) + move_x;  % Move ant along x-axis
+                obj.pos(2) = obj.pos(2) + move_y;  % Move ant along y-axis
+                
+                obj.update_global_v();          % Update the ant's global vector
             else
                 arrived = 1;
-            end
+            end    
+        end
+        function update_global_v(obj)
+            % Update the ant's global vector
+            
+            delta = obj.ang - obj.phi;      % Current turning angle
+     
+            % Version 1
+            obj.phi = (obj.l*obj.phi + obj.phi + delta)/(obj.l + 1);
+            % Version 2
+            %k = 1;
+            %obj.phi = obj.phi + k * ((pi+delta)*(pi-delta)*delta)/obj.l;
+            obj.l = obj.l + 1 - delta/(pi/2);   % Mean distance
+            
+            % Compute global vector
+            obj.global_v(1) = 50*cos(obj.phi + pi);
+            obj.global_v(2) = 50*sin(obj.phi + pi);
+        end
+        function follow_global_v(obj)
+            % Lets the ant follow its global vector
+            obj.move_to(obj.pos(1)+obj.global_v(1), obj.pos(2)+obj.global_v(2));
         end
         function plot(obj)
-            % Plots the ant
-            image(obj.pos(1), obj.pos(2), obj.im);
-            %plot (Ant_pos(1), Ant_pos(2), '.'); % Alternative
+            % Plot the ant
+            %image(obj.pos(1), obj.pos(2), obj.im);
+            plot(obj.pos(1), obj.pos(2), '.'); % Alternative
+            
+            % Plot mean vector
+            %quiver(obj.pos(1), obj.pos(2), 50*cos(obj.phi), 50*sin(obj.phi));
+            % Plot global vector
+            quiver(obj.pos(1), obj.pos(2), obj.global_v(1), obj.global_v(2));
         end
     end
     
