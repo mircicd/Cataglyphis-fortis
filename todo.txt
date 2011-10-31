@@ -1,0 +1,19 @@
+Ant:
+	- local vector	D
+	- landmarks	D
+	- search algorithm	R
+Area:
+	- Channels	R
+	- Black cylinders	A
+
+Experiments:
+	- Two-Leg Trajectories		D
+	- Three-Leg Trajectories	D
+	- (n-Leg Trajectories)
+	- (Natural Foraging Paths)
+
+	- One leg tr. with local vector	R
+	- Corridor of black cylinders	A
+
+	- Multi-leg homeward paths caused by experimental barriers
+	- Moved nest (Fig. 6)		A

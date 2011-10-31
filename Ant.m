@@ -4,11 +4,13 @@ classdef Ant < handle
     
     properties
         pos = [0, 0];               % Position
-        speed = 1;                  % Movement speed
+        speed = 0;                  % Movement speed
         global_v = [0, 0];          % Global vector
+        local_v = [0, 0];
         ang = 0;                    % Current moving angle
         phi = 0;                  % Mean angle
         l = 0;                    % Mean distance
+        landmarks = Landmark;
         
         im = imread('ant.png');     % Image to plot
     end
@@ -43,11 +45,12 @@ classdef Ant < handle
             delta = obj.ang - obj.phi;      % Current turning angle
      
             % Version 1
-            obj.phi = (obj.l*obj.phi + obj.phi + delta)/(obj.l + 1);
+            %obj.phi = (obj.l*obj.phi + obj.phi + delta)/(obj.l + 1);
             % Version 2
-            %k = 1;
-            %obj.phi = obj.phi + k * ((pi+delta)*(pi-delta)*delta)/obj.l;
+            k = 0.1;
             obj.l = obj.l + 1 - delta/(pi/2);   % Mean distance
+            obj.phi = obj.phi + k * ((pi+delta)*(pi-delta)*delta)/obj.l;
+            
             
             % Compute global vector
             obj.global_v(1) = 50*cos(obj.phi + pi);
@@ -57,9 +60,17 @@ classdef Ant < handle
             % Lets the ant follow its global vector
             obj.move_to(obj.pos(1)+obj.global_v(1), obj.pos(2)+obj.global_v(2));
         end
+        function set_landmark(obj, landmark)
+        end
+        function get_local_v(obj, landmark)
+        end
+        function found = search(obj)
+        end
         function plot(obj)
             % Plot the ant
-            %image(obj.pos(1), obj.pos(2), obj.im);
+            %obj.im = imrotate(obj.im, obj.ang);
+            %obj.im = imrotate(obj.im, obj.ang, 'crop');
+            %image(obj.pos(1)-15.5, obj.pos(2)-14, obj.im);
             plot(obj.pos(1), obj.pos(2), '.'); % Alternative
             
             % Plot mean vector

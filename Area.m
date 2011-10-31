@@ -3,12 +3,15 @@ classdef Area < handle
     %   Describes the testing area and its basic elements
     
     properties
-        size = [1000, 1000];
+        size;
         feeder_pos = [0, 0];
         nest_pos = [0, 0];
     end
     
     methods
+        function obj = Area(size_x, size_y)
+            obj.size = [size_x, size_y];
+        end
     end
     
 end
