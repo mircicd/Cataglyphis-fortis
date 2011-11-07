@@ -41,8 +41,9 @@ ylim([0, area.size(2)]);
 for time = 0:timestep:duration
     tic; % Start time measurement
     cla; % Clear axes
+    ant.m_mode = 1;
     if ~arrived
-        if ant.move_to(test(1), test(2))
+        if ant.move_to(test)
             if test(1) == 130
                 arrived = 1;
             end
@@ -57,7 +58,7 @@ for time = 0:timestep:duration
         end
     else
         if ant.follow_local_v()
-            ant.follow_global_v()
+            ant.follow_global_v();
         end
     end
     

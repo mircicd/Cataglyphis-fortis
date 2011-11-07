@@ -7,6 +7,7 @@ classdef Ant < handle
         global_v = [0, 0];          % Global vector
         local_v = [0, 0];           % Local vector
         target = [0, 0];            % Target the local vector points to
+        m_mode = 0;                 % Movement mode (randomness)
         ang = 0;                    % Current moving angle
         phi = 0;                    % Mean angle
         l = 0;                      % Mean distance
@@ -22,24 +23,28 @@ classdef Ant < handle
             obj.pos = [pos_x, pos_y];
         end     
         % Moving
-        function arrived = move_to(obj, x, y)
+        function arrived = move_to(obj, target)
             % Makes the ant move to the point specified by x and y
             % Returns 1 if the ant arrived at the point
             
             arrived = 0;
             
-            x_dist = x - obj.pos(1);            % Horizontal distance
-            y_dist = y - obj.pos(2);            % Vertical distance
-            dist = sqrt(x_dist^2 + y_dist^2);   % Euclidean distance
+            dist(1) = target(1) - obj.pos(1);    % Horizontal distance
+            dist(2) = target(2) - obj.pos(2);    % Vertical distance
+            e_dist = norm(dist);   % Euclidean distance
             
-            if dist >= obj.speed
+            if e_dist >= obj.speed
                 % Move the ant
-                move_x = (obj.speed*x_dist)/dist;
-                move_y = (obj.speed*y_dist)/dist;
-                obj.ang = angle(move_x + move_y*1i);% Compute current angle
-                obj.pos(1) = obj.pos(1) + move_x;  % Move ant along x-axis
-                obj.pos(2) = obj.pos(2) + move_y;  % Move ant along y-axis
-                
+                if obj.m_mode == 1
+                    ran = rand(1);                  % 
+                    move = [ran*((obj.speed*dist(1))/e_dist), (1-ran)*((obj.speed*dist(2))/e_dist)];
+                elseif obj.m_mode == 0
+                    move = [(obj.speed*dist(1))/e_dist, (obj.speed*dist(2))/e_dist];
+                end
+                obj.ang = angle(move(1) + move(2)*1i);% Compute current angle
+                obj.pos(1) = obj.pos(1) + move(1);  % Move ant along x-axis
+                obj.pos(2) = obj.pos(2) + move(2);  % Move ant along y-axis
+           
                 obj.update_global_v();          % Update the ant's global vector
                 obj.update_local_v();           % Update the ant's local vector
             else
@@ -91,7 +96,7 @@ classdef Ant < handle
         end  
         function follow_global_v(obj)
             % Lets the ant follow its global vector
-            obj.move_to(obj.pos(1)+obj.global_v(1), obj.pos(2)+obj.global_v(2));
+            obj.move_to(obj.pos+obj.global_v);
         end
         function update_local_v(obj)
             % Keeps the local vector associated with the last visited
@@ -114,7 +119,7 @@ classdef Ant < handle
                 % Plot local vector
                 plot([obj.pos(1),obj.target(1)], [obj.pos(2), obj.target(2)], 'magenta');
                 
-                if obj.move_to(obj.target(1), obj.target(2))
+                if obj.move_to(obj.target)
                     arrived = 1;
                     obj.target = [0, 0];
                 end
