@@ -8,10 +8,12 @@ classdef Ant < handle
         local_v = [0, 0];           % Local vector
         target = [0, 0];            % Target the local vector points to
         m_mode = 0;                 % Movement mode (randomness)
+        show_trail = 0;             % Whether the ants trail will be plotted
         ang = 0;                    % Current moving angle
         phi = 0;                    % Mean angle
         l = 0;                      % Mean distance
         landmarks;                  % List of landmarks
+        trail = [0,0];                      % Walking trail
         
         im = imread('ant.png');     % Image to plot
     end
@@ -36,7 +38,7 @@ classdef Ant < handle
             if e_dist >= obj.speed
                 % Move the ant
                 if obj.m_mode == 1
-                    ran = rand(1);                  % 
+                    ran = rand(1);                  % Random value between 0 and 1
                     move = [ran*((obj.speed*dist(1))/e_dist), (1-ran)*((obj.speed*dist(2))/e_dist)];
                 elseif obj.m_mode == 0
                     move = [(obj.speed*dist(1))/e_dist, (obj.speed*dist(2))/e_dist];
@@ -47,12 +49,52 @@ classdef Ant < handle
            
                 obj.update_global_v();          % Update the ant's global vector
                 obj.update_local_v();           % Update the ant's local vector
+                if obj.show_trail
+                    % Forms the trail behind the ant
+                    n = size(obj.trail);
+                    if norm(obj.trail(n(1),:)-obj.pos) > obj.speed*5
+                        obj.trail = [obj.trail; obj.pos];
+                    end
+                end
             else
                 arrived = 1;
             end    
         end
-        function found = search(obj)
-            %
+        function random_search(obj)
+            % Ant searches randomly for local vectors
+            r = 100; % Radius where the ant searches
+            current_position = obj.pos;
+            %kreispunkt; % Point on circle with radius r
+           
+                xr = randi([0,r]); % random number between 0 and r
+                yr = sqrt(1 - xr^2); % Calculate y-component for point on circle around current position
+                
+                % Generate random "bools"
+                b1 = randi([0,1]); % bool 1
+                b2 = rand([0,1]); % bool 2
+         
+                if b1
+                    if b2
+                        circle_point = [xr, yr];
+                    else 
+                        circle_point = [-xr, yr];
+                    end
+                else
+                    if b2
+                        circle_point = [xr, -yr];
+                    else
+                        circle_point = [-xr, -yr];
+                    end
+                end
+                obj.move_to(circle_point);
+                obj.move_to(current_position); % ant walks back
+        end
+        function move_through_channel(obj, channel)
+            % Ant walks through channel
+            obj.move_to(channel.entrance);
+            for i=1:channel.n_of_legs
+                obj.move_to(nodes(i));
+            end
         end
         % Landmarks
         function put_landmark(obj)
@@ -96,6 +138,7 @@ classdef Ant < handle
         end  
         function follow_global_v(obj)
             % Lets the ant follow its global vector
+            obj.show_trail = 1;
             obj.move_to(obj.pos+obj.global_v);
         end
         function update_local_v(obj)
@@ -110,6 +153,7 @@ classdef Ant < handle
         end
         function arrived = follow_local_v(obj)
             % Lets the ant follow the local vector (if there is any)
+            obj.show_trail = 1;
             if obj.within_landmark ~= 0
                 obj.target = obj.pos + obj.local_v;
             end
@@ -124,9 +168,8 @@ classdef Ant < handle
                     obj.target = [0, 0];
                 end
             end
-            
         end
-        
+            
         % Other
         function plot(obj)
             % Plot the ant
@@ -143,8 +186,16 @@ classdef Ant < handle
             %quiver(obj.pos(1), obj.pos(2), 50*cos(obj.phi), 50*sin(obj.phi));
             % Plot global vector
             plot([obj.pos(1),obj.pos(1)+obj.global_v(1)],[obj.pos(2), obj.pos(2)+obj.global_v(2)], 'red');
-            
             %quiver(obj.pos(1), obj.pos(2), obj.global_v(1), obj.global_v(2));
+            
+            if obj.show_trail
+                % Plot the trail
+                n = size(obj.trail);
+                for i=1:n(1)
+                    plot(obj.trail(i,1), obj.trail(i,2))
+                end
+                obj.show_trail = 0;
+            end
         end
     end
     

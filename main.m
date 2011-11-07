@@ -6,7 +6,7 @@
 % Contains data initialization
 % Entry point for program execution
 
-
+clear;
 %%%%%%% Variables & Objects %%%%%%%
 
 % Timing
@@ -17,13 +17,11 @@ itt = 0;    % Iteration time
 period = 0.05; % Iteration period
 
 % Ant
-clear ant;
 ant = Ant(500, 100);
 %ant.phi = pi/2;
 ant.speed = 1.25;  % = 25cm/s
 
 % Environment
-clear area;
 area = Area(1000,1000); % Create an area with size 10m^2
 
 % Testing
@@ -75,7 +73,7 @@ for time = 0:timestep:duration
     text(400, area.size(2)-20, strcat('local v = [',int2str(ant.local_v(1)),', ',int2str(ant.local_v(2)),']'));
     
     
-    pause(0.01);
+    pause(0.001);
     %pause(period-toc);   % Stop time measurement and keep period synchronized to 0.05s
     itt = toc;    
 end
