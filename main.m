@@ -18,9 +18,7 @@ period = 0.05; % Iteration period
 
 % Ant
 ant = Ant(500, 100);
-%ant.phi = pi/2;
-ant.speed = 1.25;  % = 25cm/s
-
+ant.m_mode = 1;
 % Environment
 area = Area(1000,1000); % Create an area with size 10m^2
 
@@ -39,7 +37,6 @@ ylim([0, area.size(2)]);
 for time = 0:timestep:duration
     tic; % Start time measurement
     cla; % Clear axes
-    ant.m_mode = 1;
     if ~arrived
         if ant.move_to(test)
             if test(1) == 130

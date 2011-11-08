@@ -3,7 +3,7 @@ classdef Ant < handle
     %   Describes the entity ant.
     properties
         pos;                        % Position
-        speed = 0;                  % Movement speed
+        speed = 1.25;               % Movement speed (equals 25cm/s)
         global_v = [0, 0];          % Global vector
         local_v = [0, 0];           % Local vector
         target = [0, 0];            % Target the local vector points to
@@ -13,7 +13,7 @@ classdef Ant < handle
         phi = 0;                    % Mean angle
         l = 0;                      % Mean distance
         landmarks;                  % List of landmarks
-        trail = [0,0];                      % Walking trail
+        trail = [0, 0];             % Walking trail
         
         im = imread('ant.png');     % Image to plot
     end
@@ -52,9 +52,11 @@ classdef Ant < handle
                 if obj.show_trail
                     % Forms the trail behind the ant
                     n = size(obj.trail);
-                    if norm(obj.trail(n(1),:)-obj.pos) > obj.speed*5
+                    if norm(obj.trail(n(1),:)-obj.pos) > 5
                         obj.trail = [obj.trail; obj.pos];
                     end
+                else
+                    obj.trail = obj.pos;
                 end
             else
                 arrived = 1;
@@ -190,10 +192,7 @@ classdef Ant < handle
             
             if obj.show_trail
                 % Plot the trail
-                n = size(obj.trail);
-                for i=1:n(1)
-                    plot(obj.trail(i,1), obj.trail(i,2))
-                end
+                plot(obj.trail(:,1), obj.trail(:,2))
                 obj.show_trail = 0;
             end
         end
