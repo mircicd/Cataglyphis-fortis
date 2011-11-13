@@ -39,10 +39,10 @@ classdef Channel < handle
         function plot(obj)
             % Plots the channel as a line            
             for i=1:2:2*obj.n_of_legs
-                line([obj.nodes(i),obj.nodes(i+2)],[obj.nodes(i+1),obj.nodes(i+3)]);       
+                line([obj.nodes(i),obj.nodes(i+2)],[obj.nodes(i+1),obj.nodes(i+3)], 'Color', [0,0,0]);       
             end
             text(obj.nodes(1)-5,obj.nodes(2)-5,'Entrance');
-            text(obj.nodes(2*obj.n_of_legs+1)-5,obj.nodes(2*obj.n_of_legs+2)-5,'Exit');
+            %text(obj.nodes(2*obj.n_of_legs+1)-5,obj.nodes(2*obj.n_of_legs+2)-5,'Exit');
         end  
         
     end  

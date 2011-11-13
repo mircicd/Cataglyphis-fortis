@@ -3,11 +3,12 @@ classdef Ant < handle
     %   Describes the entity ant.
     properties
         pos;                        % Position
-        speed = 1.25;               % Movement speed (equals 25cm/s)
+        speed = 5;               % Movement speed (equals 25cm/s)
         global_v = [0, 0];          % Global vector
         local_v = [0, 0];           % Local vector
         target = [0, 0];            % Target the local vector points to
         m_mode = 0;                 % Movement mode (randomness)
+        status = 0;                 % Movement status (either 0 for foraging or 1 for returning)
         show_trail = 0;             % Whether the ants trail will be plotted
         ang = 0;                    % Current moving angle
         phi = 0;                    % Mean angle
@@ -20,9 +21,9 @@ classdef Ant < handle
     
     methods 
         % Construction
-        function obj = Ant(pos_x, pos_y)
+        function obj = Ant(pos)
             % Creates an ant at the specified position
-            obj.pos = [pos_x, pos_y];
+            obj.pos = [pos(1), pos(2)];
         end     
         % Moving
         function arrived = move_to(obj, target)
@@ -56,7 +57,7 @@ classdef Ant < handle
                         obj.trail = [obj.trail; obj.pos];
                     end
                 else
-                    obj.trail = obj.pos;
+                    %obj.trail = obj.pos;
                 end
             else
                 arrived = 1;
@@ -91,7 +92,7 @@ classdef Ant < handle
                 obj.move_to(circle_point);
                 obj.move_to(current_position); % ant walks back
         end
-        function move_through_channel(obj, channel)
+        function arrived = move_through_channel(obj, channel)
             % Ant walks through channel
             obj.move_to(channel.entrance);
             for i=1:channel.n_of_legs
@@ -131,7 +132,7 @@ classdef Ant < handle
             % Version 1
             %obj.phi = (obj.l*obj.phi + obj.phi + delta)/(obj.l + 1);
             % Version 2
-            k = 0.15;
+            k = 0.20;
             obj.l = obj.l + 1 - delta/(pi/2);   % Mean distance
             obj.phi = obj.phi + k * ((pi+delta)*(pi-delta)*delta)/obj.l;
             
@@ -190,11 +191,9 @@ classdef Ant < handle
             plot([obj.pos(1),obj.pos(1)+obj.global_v(1)],[obj.pos(2), obj.pos(2)+obj.global_v(2)], 'red');
             %quiver(obj.pos(1), obj.pos(2), obj.global_v(1), obj.global_v(2));
             
-            if obj.show_trail
-                % Plot the trail
-                plot(obj.trail(:,1), obj.trail(:,2))
-                obj.show_trail = 0;
-            end
+            % Plot the trail
+            plot(obj.trail(:,1), obj.trail(:,2))
+            obj.show_trail = 0;
         end
     end
     
