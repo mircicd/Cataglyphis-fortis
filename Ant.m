@@ -15,6 +15,7 @@ classdef Ant < handle
         l = 0;                      % Mean distance
         landmarks;                  % List of landmarks
         trail = [0, 0];             % Walking trail
+        trails = cell(1);           % Container with all trails
         
         im = imread('ant.png');     % Image to plot
     end
@@ -24,6 +25,7 @@ classdef Ant < handle
         function obj = Ant(pos)
             % Creates an ant at the specified position
             obj.pos = [pos(1), pos(2)];
+            obj.trails{1} = [0,0];  % Empty (dummy) trail
         end     
         % Moving
         function arrived = move_to(obj, target)
@@ -57,7 +59,10 @@ classdef Ant < handle
                         obj.trail = [obj.trail; obj.pos];
                     end
                 else
-                    %obj.trail = obj.pos;
+                    if length(obj.trail) > 2
+                        obj.trails{length(obj.trails)+1} = obj.trail;
+                    end
+                    obj.trail = obj.pos;
                 end
             else
                 arrived = 1;
@@ -191,8 +196,12 @@ classdef Ant < handle
             plot([obj.pos(1),obj.pos(1)+obj.global_v(1)],[obj.pos(2), obj.pos(2)+obj.global_v(2)], 'red');
             %quiver(obj.pos(1), obj.pos(2), obj.global_v(1), obj.global_v(2));
             
-            % Plot the trail
-            plot(obj.trail(:,1), obj.trail(:,2))
+            % Plot current trail
+            plot(obj.trail(:,1), obj.trail(:,2));
+            % Plot previous trails
+            for i=1:length(obj.trails)
+                plot(obj.trails{i}(:,1), obj.trails{i}(:,2));
+            end
             obj.show_trail = 0;
         end
     end
